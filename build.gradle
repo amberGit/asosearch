@@ -1,0 +1,25 @@
+group 'com.kingdee.grab'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'java'
+apply plugin: 'idea'
+
+sourceCompatibility = 1.8
+
+
+
+
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+}
+
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+    compile 'org.apache.httpcomponents:httpclient:4.5.2'
+    compile group: 'com.google.code.gson', name: 'gson', version: '2.6.2'
+    compile 'org.apache.commons:commons-lang3:3.3.2'
+    compile 'org.jsoup:jsoup:1.7.3'
+}
