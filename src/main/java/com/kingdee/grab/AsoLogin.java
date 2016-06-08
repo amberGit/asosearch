@@ -46,7 +46,7 @@ public class AsoLogin {
 
     private Map<String, String> loginArgsMap;
     private CloseableHttpClient httpClient;
-
+    @Deprecated
     public AsoLogin(String email, String password) {
         httpClient = HttpClients.createDefault();
         loginArgsMap = new HashMap<>();
@@ -92,50 +92,6 @@ public class AsoLogin {
         return cookieStore;
     }
 
-
-    private String loginPage() {
-        HttpGet httpGet = new HttpGet(LOGIN_PAGE_URL);
-        try {
-            try (CloseableHttpResponse response = httpClient.execute(httpGet)) {
-                HttpEntity entity = response.getEntity();
-                if (entity != null) {
-                    return EntityUtils.toString(entity);
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return "";
-    }
-
-    private String getRand(String content) throws Exception {
-        if (StringUtils.isBlank(content)) {
-            throw new Exception("没有抓取到主页内容");
-        } else {
-            Document document = Jsoup.parse(content);
-            Elements randElem = document.select("input[name=rand]");
-            return randElem.first().val();
-        }
-    }
-
-    private Geetest getGeetest() {
-        long currentTimestamp = System.currentTimeMillis();
-        String requestParams = "?t=" + currentTimestamp;
-        HttpGet httpGet = new HttpGet(GT_URL + requestParams);
-        try {
-            try (CloseableHttpResponse response = httpClient.execute(httpGet)) {
-                HttpEntity entity = response.getEntity();
-                if (entity != null) {
-                    Gson gson = new Gson();
-                    return gson.fromJson(EntityUtils.toString(entity), Geetest.class);
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
     public List<SearchRelatedResult> searchRelated(String text) {
         HttpGet httpGet = new HttpGet(SEARCH_RELATED_URL + "?term=" + text);
         try {
@@ -154,6 +110,7 @@ public class AsoLogin {
         return null;
     }
 
+    @Deprecated
     public void login() {
         HttpPost httpPost = new HttpPost(LOGIN_URL);
         List<NameValuePair> params = new ArrayList<>();
@@ -188,6 +145,50 @@ public class AsoLogin {
         }
 
 
+    }
+
+    @Deprecated
+    private String loginPage() {
+        HttpGet httpGet = new HttpGet(LOGIN_PAGE_URL);
+        try {
+            try (CloseableHttpResponse response = httpClient.execute(httpGet)) {
+                HttpEntity entity = response.getEntity();
+                if (entity != null) {
+                    return EntityUtils.toString(entity);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+    @Deprecated
+    private String getRand(String content) throws Exception {
+        if (StringUtils.isBlank(content)) {
+            throw new Exception("没有抓取到主页内容");
+        } else {
+            Document document = Jsoup.parse(content);
+            Elements randElem = document.select("input[name=rand]");
+            return randElem.first().val();
+        }
+    }
+    @Deprecated
+    private Geetest getGeetest() {
+        long currentTimestamp = System.currentTimeMillis();
+        String requestParams = "?t=" + currentTimestamp;
+        HttpGet httpGet = new HttpGet(GT_URL + requestParams);
+        try {
+            try (CloseableHttpResponse response = httpClient.execute(httpGet)) {
+                HttpEntity entity = response.getEntity();
+                if (entity != null) {
+                    Gson gson = new Gson();
+                    return gson.fromJson(EntityUtils.toString(entity), Geetest.class);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 }
