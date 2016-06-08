@@ -21,6 +21,7 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.BufferedReader;
@@ -43,6 +44,20 @@ public class AsoLogin {
     private static final String LOGIN_URL = "http://www.chandashi.com/User/login";
     private static final String LOGIN_PAGE_URL = "http://www.chandashi.com/user/login.html";
     private static final String HOME_PAGE = "http://chandashi.com/";
+    public enum PlatformType {
+        IOS("store"), ANDROID("android");
+
+        private final String value;
+
+        PlatformType(String value) {
+            this.value = value;
+        }
+
+        public String value() {
+            return this.value;
+        }
+    }
+
 
     private Map<String, String> loginArgsMap;
     private CloseableHttpClient httpClient;
@@ -67,6 +82,31 @@ public class AsoLogin {
         httpClient = HttpClients.custom().setDefaultCookieStore(cookieStore).build();
     }
 
+    public Map<String, String> search(String keyword, PlatformType platformType) throws Exception {
+        HttpGet httpGet = new HttpGet(SEARCH_URL + "?view=html&keyword=" + keyword + "&type=" + platformType.value());
+        try {
+            try (CloseableHttpResponse response = httpClient.execute(httpGet)) {
+                HttpEntity entity = response.getEntity();
+                if (entity != null) {
+                    Document document = Jsoup.parse(EntityUtils.toString(entity));
+                    Elements searchResults = document.select("#searchlist");
+                    if (searchResults == null) {
+                        throw new Exception("不能找到搜索列表");
+                    }
+                    Map<String, String> searchResultMap = new HashMap<>();
+                    Element searchResult = searchResults.first();
+                    searchResult.children().stream().filter(element -> element.child(0).child(1).tagName().equals("a")).forEach(element1 -> {
+                        Element oneOfSearchResult = element1.child(0).child(1);
+                        searchResultMap.put(oneOfSearchResult.attr("title"), oneOfSearchResult.attr("href"));
+                    });
+                    return searchResultMap;
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
     private CookieStore loadLocalCookies(final String cookieStr) {
         String cookieRegex = "(\\S+)\\s\\S+\\s(\\S+)\\s\\S+\\s(?:(\\d+)\\s)?(\\S+)\\s([^\\n]+)";
