@@ -28,6 +28,9 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.ParseException;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -72,10 +75,8 @@ public class AsoLogin {
     public AsoLogin(final String cookieFilePath) {
         StringBuilder cookieStr = new StringBuilder();
         try {
-            FileReader fileReader = new FileReader(cookieFilePath);
-            BufferedReader bufferedReader = new BufferedReader(fileReader);
-            bufferedReader.lines().forEach(s -> cookieStr.append(s).append('\n'));
-        } catch (FileNotFoundException e) {
+            Files.lines(Paths.get(cookieFilePath), StandardCharsets.UTF_8).forEach(line -> cookieStr.append(line).append('\n'));
+        } catch (IOException e) {
             e.printStackTrace();
         }
         CookieStore cookieStore = loadLocalCookies(cookieStr.toString());
@@ -83,7 +84,7 @@ public class AsoLogin {
     }
 
     public Map<String, String> search(String keyword, PlatformType platformType) throws Exception {
-        HttpGet httpGet = new HttpGet(SEARCH_URL + "?view=html&keyword=" + keyword + "&type=" + platformType.value());
+        HttpGet httpGet = new HttpGet(SEARCH_URL + "?view=web&keyword=" + keyword + "&type=" + platformType.value());
         try {
             try (CloseableHttpResponse response = httpClient.execute(httpGet)) {
                 HttpEntity entity = response.getEntity();

@@ -20,7 +20,8 @@ public class AsoLoginTest {
 
     @Test
     public void searchTest() {
-        AsoLogin asoLogin = new AsoLogin("C:\\Users\\Administrator\\Desktop\\cookies.txt");
+//        AsoLogin asoLogin = new AsoLogin("C:\\Users\\Administrator\\Desktop\\cookies.txt");
+        AsoLogin asoLogin = new AsoLogin("E:\\系统\\桌面\\cookies.txt");
         try {
             Map<String, String > searchMap = asoLogin.search("51", AsoLogin.PlatformType.IOS);
         } catch (Exception e) {
