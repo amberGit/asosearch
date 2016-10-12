@@ -143,6 +143,19 @@ public class GuangDongUnicom {
         return "";
     }
 
+    public String getBindNumInfo() {
+        String url = "https://uac.10010.com/cust/userinfo/getBindnumInfo";
+
+        HttpPost post = new HttpPost(url);
+
+        try (CloseableHttpResponse response = httpClient.execute(post)) {
+            return EntityUtils.toString(response.getEntity());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return "";
+    }
     public boolean login() {
         boolean result = false;
         String randomNumber = (Math.random() + "").replaceAll("\\D", "");
