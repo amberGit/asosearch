@@ -171,7 +171,7 @@ public class GuangDongUnicom {
 
             if ("OK".equals(response.getStatusLine().getReasonPhrase()) && 200 == response.getStatusLine().getStatusCode())
                 result = true;
-
+            System.out.println(EntityUtils.toString(response.getEntity()));
         } catch (IOException e) {
             e.printStackTrace();
         }

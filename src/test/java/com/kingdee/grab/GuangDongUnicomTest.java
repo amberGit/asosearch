@@ -21,7 +21,7 @@ public class GuangDongUnicomTest {
 
     @Test
     public void testLogin() {
-        GuangDongUnicom guangDongUnicom = new GuangDongUnicom("18588200807", "930811");
+        GuangDongUnicom guangDongUnicom = new GuangDongUnicom("18588200807", "9308111");
         if (guangDongUnicom.login()) {
             guangDongUnicom.homepage();
 //            String callDetail = guangDongUnicom.getCallDetail("2016-09-01", "2016-09-27", "1", "50");
